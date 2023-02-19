@@ -3,18 +3,31 @@ import { Section } from './Section/Section';
 import { Form } from './Form/Form';
 import { ContactsList } from './ContactList/ContactList';
 import { Filter } from './Filter/Filter';
+import storage from 'components/helpers/storage';
 import { nanoid } from 'nanoid';
 
+const INITIALSTATE = [
+  { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+  { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+  { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+  { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+];
 export class App extends Component {
   state = {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
+    contacts: [],
     filter: '',
   };
+
+  componentDidMount() {
+    const savedForm = storage.load('contacts') ?? INITIALSTATE;
+    this.setState({ contacts: savedForm });
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      storage.save('contacts', this.state.contacts);
+    }
+  }
 
   addName = ({ name, number }) => {
     const isRepeated = this.state.contacts.find(
@@ -48,7 +61,7 @@ export class App extends Component {
   render() {
     const { contacts, filter } = this.state;
     const selectedContacts = contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter.toLowerCase())
+      contact.name.trim().toLowerCase().includes(filter.toLowerCase())
     );
 
     return (
