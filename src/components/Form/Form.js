@@ -1,8 +1,6 @@
 import { Component } from 'react';
-
 import { FormStyled, FormInput, FormLabel, FormButton } from './Form.styled';
 import PropTypes from 'prop-types';
-
 export class Form extends Component {
   state = {
     name: '',
