@@ -21,5 +21,4 @@ const storage = {
   save,
   load,
 };
-
 export default storage;
